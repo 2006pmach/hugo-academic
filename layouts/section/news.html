@@ -1,0 +1,36 @@
+{{ partial "header.html" . }}
+{{ partial "navbar.html" . }}
+
+{{ partial "header_image.html" . }}
+
+<div class="universal-wrapper">
+
+  <h1>{{ .Title }}</h1>
+
+  {{ with .Content }}
+  <div class="article-style" itemprop="articleBody">{{ . }}</div>
+  {{ end }}
+
+  {{ $paginator := .Paginate .Data.Pages }}
+  {{ range $paginator.Pages }}
+  <div class="row">
+      <div class="col-sm-2">
+        <div itemprop="startDate">
+
+          {{ $date := .Params.date | default .Date }}
+          {{ (time $date).Format $.Site.Params.date_format }}
+
+        </div>
+      </div>
+      <div class="col-sm-10">
+        {{ .Content}}
+      </div>
+  </div>
+  {{ end }}
+
+  {{ partial "pagination" . }}
+
+</div>
+
+{{ partial "footer_container.html" . }}
+{{ partial "footer.html" . }}

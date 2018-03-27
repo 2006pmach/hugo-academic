@@ -1,0 +1,43 @@
+{{ $ := .root }}
+{{ $page := .page }}
+{{ $news_len := len (where (where $.Site.RegularPages "Type" "news") ".Params.notonhomepage" nil) }}
+
+
+<div class="row">
+  <div class="col-xs-12 col-md-4 section-heading">
+
+    <h1>{{ with $page.Title }}{{ . | markdownify }}{{ end }}</h1>
+    {{ with $page.Params.subtitle }}<p>{{ . | markdownify }}</p>{{ end }}
+
+    {{ if gt $news_len $page.Params.count }}
+    <p class="view-all">
+      <a href="{{ "/news/" | relLangURL }}">
+        More News
+        <i class="fa fa-angle-double-right"></i>
+      </a>
+    </p>
+    {{ end }}
+
+  </div>
+  <div class="col-xs-12 col-md-8">
+    <div class="row">
+
+        {{ $news := where $.Site.RegularPages "Type" "news"}}
+        {{ range $elem :=  first $page.Params.count $news }} 
+
+        <div class="col-sm-3">
+            <div itemprop="startDate">
+
+                {{ $date := $elem.Params.date | default .Date }}
+                {{ (time $date).Format $.Site.Params.date_format }}
+
+            </div>
+        </div>
+        <div class="col-sm-9">
+            {{ $elem.Content}}
+        </div>
+
+        {{ end }}
+    </div>
+  </div>
+</div>
